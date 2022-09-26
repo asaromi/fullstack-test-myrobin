@@ -1,5 +1,5 @@
 module.exports = {
   port: 3000,
   mongodbUrl: "mongodb://user:password@host:port/dbName",
-  jwtSecret: "",
+  jwtSecret: "your_secret_sentence@algorithm", // using secret@algorithm for crypto encryption
 }
