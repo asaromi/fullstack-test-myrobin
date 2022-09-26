@@ -1,3 +1,9 @@
+.btn-normal {
+  --bs-btn-hover-color: #000;
+  --bs-btn-hover-bg: #fff;
+  --bs-btn-active-border-color: #fff;
+}
+
 .btn-chat {
   --bs-btn-color: #fff !important;
   --bs-btn-bg: #5DB075 !important;
@@ -14,6 +20,10 @@
   --bs-btn-disabled-border-color: #5DB075;
 }
 
+.text-normal {
+  color: #fff;
+}
+
 .chat-primary {
-  color: "#5DB075";
+  color: #5DB075 !important;
 }

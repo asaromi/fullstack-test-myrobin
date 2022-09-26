@@ -3,10 +3,10 @@ const Schema = mongoose.Schema
 
 const Chat = mongoose.model(
   "Chat",
-  new mongoose.Schema(
+  new Schema(
     {
       message: {
-        type: String,
+        type: Object,
         required: true,
       },
       sender: {
@@ -16,7 +16,13 @@ const Chat = mongoose.model(
       chatroom: {
         type: Schema.Types.ObjectId,
         ref: "chatrooms",
+        select: false,
       },
+      category: {
+        type: String,
+        enum: ["notif", "message"],
+        default: "notif"
+      }
     },
     {
       timestamps: true,
@@ -26,25 +32,18 @@ const Chat = mongoose.model(
 
 const Chatroom = mongoose.model(
   "Chatroom",
-  new mongoose.Schema(
+  new Schema(
     {
       code: {
         type: String,
         unique: true,
         required: true,
       },
-      chats: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "chats",
-        },
-      ],
-      members: [
-        {
-          type: String,
-          unique: true,
-        },
-      ],
+      members: {
+        type: Schema.Types.Array,
+        required: false,
+        default: []
+      },
       online: {
         type: Number,
         default: 0,
@@ -56,4 +55,4 @@ const Chatroom = mongoose.model(
   )
 )
 
-module.exports = { Chatroom }
+module.exports = { Chat, Chatroom }

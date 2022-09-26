@@ -1,8 +1,8 @@
-const express = require("express")
-const app = express()
 const mongoose = require("mongoose")
-const { mongodbUrl, host, port } = require("./config")
-const routes = require("./src/routes")
+let { mongodbUrl, host, port } = require("./config")
+const { server } = require("./src/app")
+
+host = (host && [host]) || []
 
 mongoose
   .connect(mongodbUrl, {
@@ -18,10 +18,9 @@ mongoose
     process.exit()
   })
 
-app.use("/", routes)
-
-app.listen(port, (host !== undefined && host) || "localhost", () =>
+server.listen(port, ...host, () =>
   console.log(
-    "Server Running at " + ((host && `${host}:${port}`) || `port ${port}`)
+    "Server Running at " +
+      ((host.length > 0 && `${host[0]}:${port}`) || `port ${port}`)
   )
 )

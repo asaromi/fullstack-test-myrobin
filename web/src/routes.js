@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router"
-import JoinChatroom from "../views/JoinChatroom.vue"
-import ChatRoom from "../views/ChatRoom.vue"
+import JoinChatroom from "./views/JoinChatroom.vue"
+import ChatRoom from "./views/ChatRoom.vue"
 
 const routes = [
   {
