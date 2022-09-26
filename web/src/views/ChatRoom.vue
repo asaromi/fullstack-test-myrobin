@@ -19,7 +19,7 @@
                       width="16"
                       height="16"
                       fill="currentColor"
-                      class="bi bi-box-arrow-left"
+                      class="bi bi-box-arrow-left ms-2 me-2"
                       viewBox="0 0 16 16"
                     >
                       <path
@@ -31,7 +31,7 @@
                         d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"
                       />
                     </svg>
-                    Leave
+                    Exit
                   </button>
                   <div class="col d-flex align-items-center">
                     <!-- <a href="javascript:void(0);">
@@ -65,7 +65,7 @@
                         class="dropdown-item"
                         type="button"
                         v-for="user in activeUsers"
-                        v-bind:key="user"
+                        :key="user"
                       >
                         {{ user }}
                       </button>
@@ -80,7 +80,7 @@
                   <li
                     v-for="msg in messages"
                     class="clearfix"
-                    v-bind:key="msg.message"
+                    :key="msg._id"
                   >
                     <p v-if="msg.sender != username" class="text-start m-2">
                       {{ msg.sender }}
@@ -145,41 +145,12 @@ export default {
   name: "ChatRoom",
   data() {
     return {
-      socket: io("http://192.168.100.8:5000"),
+      socket: io(API_URL),
       roomCode: this.$route.params.roomCode,
       yourChat: "",
       token: localStorage.getItem("token"),
       username: localStorage.getItem("username"),
-      messages: [
-        {
-          message:
-            "Anjayy alksmd aslkdansld asjkdm alsknmalksd laksmdalks d\n asoidaosndaskda sdkjasdnkajs djkasd ajksdak sd",
-          category: "notif",
-          createdAt: "12 september",
-          sender: "asaromi",
-        },
-        {
-          message:
-            "Anjayy alksmd aslkdansld asjkdm alsknmalksd laksmdalks d\n asoidaosndaskda sdkjasdnkajs djkasd ajksdak sd",
-          category: "notif",
-          createdAt: "12 september",
-          sender: "asaromi001",
-        },
-        {
-          message:
-            "Anjayy alksmd aslkdansld asjkdm alsknmalksd laksmdalks d\n asoidaosndaskda sdkjasdnkajs djkasd ajksdak sd",
-          category: "notif",
-          createdAt: "12 september",
-          sender: "others",
-        },
-        {
-          message:
-            "Anjayy alksmd aslkdansld asjkdm alsknmalksd laksmdalks d\n asoidaosndaskda sdkjasdnkajs djkasd ajksdak sd",
-          category: "notif",
-          createdAt: "12 september",
-          sender: "asaromi001",
-        },
-      ],
+      messages: [],
       activeUsers: [],
       online: 0,
     }
@@ -211,6 +182,7 @@ export default {
         })
         .catch((err) => {
           if (DEBUG) console.error(err)
+          alert(err.message)
         })
     },
     leaveChatroom: function () {
@@ -225,8 +197,12 @@ export default {
             localStorage.removeItem("token")
             localStorage.removeItem("username")
             localStorage.removeItem("roomCode")
-            location.href = "/"
+            this.$router.push('/')
           }
+        })
+        .catch((err) => {
+          if (DEBUG) console.error(err)
+          alert(err.message)
         })
     },
     getMessages: function () {
@@ -238,21 +214,20 @@ export default {
         })
         .then((res) => {
           if (res.data?.success) {
-            res.data.data.messages.map((msg) => {
-              this.messages.push({ ...msg, message: decrypt(msg.message) })
+            this.messages = res.data.data.messages.map((msg) => {
+              return { ...msg, message: decrypt(msg.message) }
             })
-            console.log(this.messages)
             this.activeUsers = res.data.data.chatroom.members
             this.online = res.data.data.chatroom.online
           }
         })
         .catch((err) => {
           if (DEBUG) console.error(err)
+          alert(err.message)
         })
     },
     scrollToLastMessage: function () {
       setTimeout(() => {
-        console.log(document.querySelector(".chat-history").scrollHeight)
         document.querySelector(".chat-history").scrollTo({
           top: document.querySelector(".chat-history").scrollHeight,
           behavior: "smooth",
@@ -265,7 +240,6 @@ export default {
     this.scrollToLastMessage()
 
     this.socket.on(`RECEIVE_MESSAGE_${this.roomCode}`, (data) => {
-      // if (data.roomCode == this.roomCode) {
       let { roomCode, message, ...payload } = data
       message = decrypt(message)
       console.log(roomCode)
@@ -274,13 +248,7 @@ export default {
         message,
       })
       this.scrollToLastMessage()
-      // }
     })
-  },
-  watch: {
-    handleBtnCode: function (e) {
-      if (DEBUG) alert(e.target.value)
-    },
   },
 }
 </script>

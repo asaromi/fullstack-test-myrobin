@@ -27,3 +27,8 @@
 .chat-primary {
   color: #5DB075 !important;
 }
+
+.btn-light {
+  border-radius: 40px !important;
+  border: 0.25px solid rgb(150, 148, 148) !important;
+}

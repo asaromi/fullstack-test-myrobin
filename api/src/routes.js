@@ -5,16 +5,17 @@ const {
   headerChatroom,
   getChatroomMessages,
   sendMessage,
+  getActiveChatrooms,
 } = require("./controllers")
 const router = new Router()
 
 router.get("/", (req, res) => {
-  console.log("anjas")
-  res.status(200).json({ success: true })
+  return res.status(200).json({ success: true })
 })
 
 router.post("/join", joinChatroom)
 router.get("/leave", headerChatroom, leaveChatroom)
+router.get("/chatroom", getActiveChatrooms)
 router.get("/chatroom/:roomCode", headerChatroom, getChatroomMessages)
 router.post("/chatroom/:roomCode", headerChatroom, sendMessage)
 

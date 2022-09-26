@@ -102,17 +102,13 @@ img {
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-top-color: #fff;
+  border-top-color: #e8e8e8;
   border-width: 10px;
   margin-left: -10px;
 }
 .other-message,
 .my-message {
-  /* Vector */
   position: absolute;
-
-  /* Green/Primary */
-
   background: #5DB075;
   transform: matrix(1, 0, 0, 1, 0, 0);
 }
@@ -128,7 +124,7 @@ img {
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-top-color: #efefef;
+  border-top-color: #e8e8e8;
   border-width: 10px;
   margin-left: -10px;
 }

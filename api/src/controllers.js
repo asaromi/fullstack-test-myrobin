@@ -76,7 +76,7 @@ exports.getActiveChatrooms = async (req, res) => {
       .select("code")
       .lean()
 
-    return successResponse(res)(200, { ...chatrooms })
+    return successResponse(res)(200, chatrooms)
   } catch (error) {
     return errorResponse(res)(500)
   }
@@ -91,8 +91,13 @@ exports.sendMessage = async (req, res) => {
         message: "You are not in the Chatroom anymore",
       }
     }
-    
-    const message = await Chat.create({ message: req.body.message, sender, chatroom, category: "message" })
+
+    const message = await Chat.create({
+      message: req.body.message,
+      sender,
+      chatroom,
+      category: "message",
+    })
 
     return successResponse(res)(201, { ...message.toObject(), roomCode: code })
   } catch (error) {
@@ -110,7 +115,9 @@ exports.getChatroomMessages = async (req, res) => {
       }
     }
     // if (debug) console.log(chatroom)
-    let messages = await Chat.find({ chatroom }).lean()
+    let messages = await Chat.find({ chatroom })
+      .select("_id message sender")
+      .lean()
     messages = { messages, chatroom: req.chatroom }
 
     return successResponse(res)(200, { ...messages })

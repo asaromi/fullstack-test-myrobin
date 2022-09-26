@@ -1,6 +1,4 @@
-const { createDecipheriv } = require("crypto")
 const { debug, jwtSecret } = require("../config")
-const [key, alg] = jwtSecret.split("@")
 
 exports.successResponse = (res) => (code, data) => {
   return res.status(code || 200).json({

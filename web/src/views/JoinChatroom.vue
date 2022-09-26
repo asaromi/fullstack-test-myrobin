@@ -14,7 +14,7 @@
           />
           <label for="username">Username</label>
         </div>
-        <div class="form-floating mb-5">
+        <div class="form-floating mb-4">
           <input
             type="text"
             class="form-control"
@@ -23,6 +23,19 @@
             v-model="roomCode"
           />
           <label for="roomCode">Chatroom Code</label>
+        </div>
+        <div class="mt-4 mb-5">
+          <p class="mb-3">Or choose the active chatrooms</p>
+          <button
+            type="button"
+            class="btn btn-light m-1"
+            v-for="room in activeChatrooms"
+            :key="room._id"
+            :id="room.code"
+            @click="(event) => clickRoomCode(event)"
+          >
+            {{ room.code }}
+          </button>
         </div>
         <button type="submit" class="btn btn-chat w-100 mt-5">Join</button>
       </form>
@@ -42,6 +55,7 @@ export default {
       username: "",
       roomCode: "",
       isLoading: false,
+      activeChatrooms: [],
     }
   },
   methods: {
@@ -51,17 +65,15 @@ export default {
         .post(`${API_URL}/join`, { username, roomCode })
         .then((res) => {
           if (res.data?.success) {
-            // location.href = `/chatroom/${this.roomCode}`
             if (DEBUG) console.log("Sukses Join")
             localStorage.setItem("token", res.data.data.token)
             localStorage.setItem("username", username)
             localStorage.setItem("roomCode", roomCode)
-            location.href = `/chatroom/${roomCode}`
+            this.$router.push(`/chatroom/${roomCode}`)
           }
         })
         .catch((err) => {
           if (DEBUG) console.error(err)
-          alert(err.message)
         })
     },
     getChatroom: function (session) {
@@ -74,8 +86,8 @@ export default {
         })
         .then((res) => {
           if (res.data?.success) {
-            const { currentUser } = res.data.data.chatroom
-            if (currentUser == username) location.href = `/chatroom/${roomCode}`
+            const currentUser = res.data.data?.chatroom?.currentUser
+            if (currentUser == username) this.$router.push(`/chatroom/${roomCode}`)
             else this.joinRoom(session)
           }
         })
@@ -88,11 +100,20 @@ export default {
         this.getChatroom(localStorage)
       }
     },
+    clickRoomCode: function(e) {
+      document.querySelector("#roomCode").value = e.target.id
+    },
+    getActiveChatrooms: function () {
+      axios.get(`${API_URL}/chatroom`).then((res) => {
+        this.activeChatrooms = [...res.data.data]
+      }).catch(err => {
+        if (DEBUG) console.error(err)
+      })
+    },
   },
   mounted() {
     this.checkSession()
+    this.getActiveChatrooms()
   },
 }
 </script>
-
-<style scoped></style>
