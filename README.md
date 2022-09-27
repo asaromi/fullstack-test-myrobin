@@ -7,6 +7,7 @@
 ### Setup Server
 - copy config.js.example to config.js
 - fill all config fields based on comment rules
+- open the terminal and change directory to `api/` folder
 - execute `npm install` to install all required npm packages
 - execute `npm run dev` to run the server service
 - if success running the server service, you will see :
@@ -19,6 +20,7 @@ Successfully connected to the database
 ### Setup Client
 - copy .env.example to .env
 - fill all config fields based on comment rules
+- open the terminal and change directory to `web/` folder
 - execute `npm install` to install all required npm packages
 - execute `npm run serve` to run client service in development mode
 - if success running the client service, you will see :
