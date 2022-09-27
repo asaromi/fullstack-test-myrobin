@@ -34,5 +34,5 @@ App running at:
 ### API Testing
 There is a simple way to testing Express API. Execute with `npm test` after **Setup Server**
 ### Project Limitation
-- status offline or chatroom members only will be removed user have been logout.
+- status offline or chatroom members only will be removed when user exiting chatrooms. (Cannot do automatic logout)
 - testing only for ExpressJS API not with VueJS (my first project using testing expressJS)
